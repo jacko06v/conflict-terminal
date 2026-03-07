@@ -115,8 +115,11 @@ function connect(apiKey: string) {
         const typeCode = typeCache.get(mmsi) ?? 0;
         const flag     = flagFromMmsi(mmsi);
 
-        // Only track warships (AIS type 35) — skip commercial/civilian vessels
-        if (typeCode !== 35) return;
+        const affiliation = affiliationFromFlag(flag);
+
+        // Only track: explicitly military (type 35) OR vessels from relevant countries
+        // Many warships broadcast type 0 (unknown) so we can't rely on type alone
+        if (typeCode !== 35 && affiliation === "unknown") return;
 
         const vessel: TrackedVessel = {
           mmsi,
@@ -130,7 +133,7 @@ function connect(apiKey: string) {
           heading:     heading > 360 ? 0 : heading,
           destination: destCache.get(mmsi) ?? "",
           is_warship:  typeCode === 35,
-          affiliation: affiliationFromFlag(flag),
+          affiliation,
           updated_at:  Date.now(),
         };
         trackingCache.setVessel(vessel);
