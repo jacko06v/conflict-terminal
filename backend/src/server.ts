@@ -8,6 +8,7 @@ import { timelineRoutes } from "./routes/timeline";
 import { sourcesRoutes } from "./routes/sources";
 import { mapRoutes } from "./routes/map";
 import { trackingRoutes } from "./routes/tracking";
+import { analyticsRoutes } from "./routes/analytics";
 import { startScheduler } from "./schedulers/ingestionScheduler";
 import { refreshAircraft } from "./providers/adsbProvider";
 import { startAisStream } from "./providers/aisProvider";
@@ -48,6 +49,7 @@ async function main() {
   app.register(sourcesRoutes, { prefix: "/api" });
   app.register(mapRoutes, { prefix: "/api" });
   app.register(trackingRoutes, { prefix: "/api" });
+  app.register(analyticsRoutes, { prefix: "/api" });
 
   // Global error handler
   app.setErrorHandler((error, _request, reply) => {

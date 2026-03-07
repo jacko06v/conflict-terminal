@@ -14,7 +14,21 @@ const MIN_TIMELINE_H = 80;
 const MAX_TIMELINE_H = 400;
 const DEFAULT_TIMELINE_H = 112;
 
+//just to check if someone is using the website
+function usePageView() {
+  useEffect(() => {
+    if (sessionStorage.getItem("tracked")) return;
+    sessionStorage.setItem("tracked", "1");
+    fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ referrer: document.referrer }),
+    }).catch(() => {});
+  }, []);
+}
+
 export default function App() {
+  usePageView();
   const { data: layers } = useMapLayers();
   const setLayers = useAppStore((s) => s.setLayers);
   const filtersOpen = useAppStore((s) => s.filtersOpen);
