@@ -7,8 +7,7 @@ const EVENT_TYPES: { value: EventType | ""; label: string }[] = [
   { value: "airstrike", label: "Airstrike" },
   { value: "missile", label: "Missile" },
   { value: "drone", label: "Drone" },
-  { value: "fire", label: "Fire / Thermal" },
-  { value: "infrastructure", label: "Infrastructure" },
+{ value: "infrastructure", label: "Infrastructure" },
   { value: "troop_movement", label: "Troop Movement" },
   { value: "alert", label: "Alert" },
 ];

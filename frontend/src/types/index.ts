@@ -104,7 +104,6 @@ export const EVENT_LABELS: Record<EventType, string> = {
   airstrike: "Airstrike",
   missile: "Missile",
   drone: "Drone",
-  fire: "Fire / Thermal",
   infrastructure: "Infrastructure",
   troop_movement: "Troop Movement",
   alert: "Alert",
