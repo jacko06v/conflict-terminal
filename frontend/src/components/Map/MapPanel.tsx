@@ -5,6 +5,7 @@ import { useAppStore } from "../../stores/useAppStore";
 import { ConflictEvent, EVENT_COLORS, EVENT_LABELS, MapLayer } from "../../types";
 import Legend from "./Legend";
 import LayerControls from "./LayerControls";
+import TrackingLayer from "./TrackingLayer";
 
 interface StackedPicker {
   x: number;
@@ -417,6 +418,8 @@ export default function MapPanel() {
           onClose={() => setPicker(null)}
         />
       )}
+
+      <TrackingLayer map={mapRef.current} mapLoaded={mapLoaded} />
 
       {/* Debug overlay — remove in production */}
       {import.meta.env.DEV && (

@@ -3,7 +3,7 @@ import { Event, EventFilters, EventWithSources, Source } from "../types";
 import { parseBbox } from "../utils/geo";
 
 export async function findEvents(filters: EventFilters): Promise<Event[]> {
-  const conditions: string[] = ["e.is_active = true"];
+  const conditions: string[] = ["e.is_active = true", "e.event_type != 'fire'"];
   const params: unknown[] = [];
   let idx = 1;
 

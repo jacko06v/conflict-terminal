@@ -68,7 +68,7 @@ export default function EventDetailDrawer() {
   const verifyColor = event ? VERIFICATION_COLORS[event.verification_status] : "#4a5568";
 
   return (
-    <div className="fixed inset-y-0 right-80 w-96 bg-terminal-surface border-l border-terminal z-30 flex flex-col shadow-2xl overflow-hidden max-h-screen">
+    <div className="fixed inset-0 md:inset-y-0 md:left-auto md:right-80 md:w-96 bg-terminal-surface border-l border-terminal z-40 flex flex-col shadow-2xl overflow-hidden">
       {/* Header */}
       <div
         className="flex items-center justify-between px-4 py-3 border-b border-terminal flex-shrink-0"

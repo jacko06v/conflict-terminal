@@ -3,7 +3,6 @@ export type EventType =
   | "airstrike"
   | "missile"
   | "drone"
-  | "fire"
   | "infrastructure"
   | "troop_movement"
   | "alert";
@@ -95,7 +94,6 @@ export const EVENT_COLORS: Record<EventType, string> = {
   airstrike: "#f97316",
   missile: "#f59e0b",
   drone: "#eab308",
-  fire: "#dc2626",
   infrastructure: "#a855f7",
   troop_movement: "#3b82f6",
   alert: "#06b6d4",

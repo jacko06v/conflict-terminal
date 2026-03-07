@@ -70,7 +70,7 @@ export default function StatsCards() {
         accent="cyan"
         loading={isLoading}
       />
-      <div className="ml-auto text-terminal-dim text-[10px] font-mono whitespace-nowrap">
+      <div className="ml-auto text-terminal-dim text-[10px] font-mono whitespace-nowrap hidden md:block">
         LAST UPDATE: <span className="text-terminal-amber">{lastUpdate}</span>
       </div>
     </div>

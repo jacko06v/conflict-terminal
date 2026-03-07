@@ -7,7 +7,11 @@ import { statsRoutes } from "./routes/stats";
 import { timelineRoutes } from "./routes/timeline";
 import { sourcesRoutes } from "./routes/sources";
 import { mapRoutes } from "./routes/map";
+import { trackingRoutes } from "./routes/tracking";
 import { startScheduler } from "./schedulers/ingestionScheduler";
+import { refreshAircraft } from "./providers/adsbProvider";
+import { startAisStream } from "./providers/aisProvider";
+
 import { registerClient, clientCount } from "./websocket/wsServer";
 
 const app = Fastify({ logger: { level: "warn" } });
@@ -43,6 +47,7 @@ async function main() {
   app.register(timelineRoutes, { prefix: "/api" });
   app.register(sourcesRoutes, { prefix: "/api" });
   app.register(mapRoutes, { prefix: "/api" });
+  app.register(trackingRoutes, { prefix: "/api" });
 
   // Global error handler
   app.setErrorHandler((error, _request, reply) => {
@@ -56,6 +61,11 @@ async function main() {
 
   // Start ingestion scheduler
   startScheduler();
+
+  // Start live tracking (aircraft every 60s, vessels via persistent WS)
+  refreshAircraft().catch(() => {});
+  setInterval(() => refreshAircraft().catch(() => {}), 60_000);
+  startAisStream();
 }
 
 main().catch((err) => {

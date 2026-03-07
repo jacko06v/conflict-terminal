@@ -8,7 +8,7 @@ export default function LayerControls() {
   if (layers.length === 0) return null;
 
   return (
-    <div className="absolute top-3 left-3 glass border border-terminal rounded p-3 z-10 text-xs font-mono">
+    <div className="hidden md:block absolute top-3 left-3 glass border border-terminal rounded p-3 z-10 text-xs font-mono">
       <div className="text-terminal-dim text-[10px] tracking-wider mb-2 uppercase">
         Layers
       </div>

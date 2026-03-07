@@ -35,7 +35,7 @@ services:
       - "4000:4000"
     volumes:
       - ./backend/src:/app/src
-    command: sh -c "npm run migrate && npm run seed && npm run dev"
+    command: sh -c "./entrypoint.sh"
 
   frontend:
     build:

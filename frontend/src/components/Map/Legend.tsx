@@ -4,7 +4,7 @@ const EVENT_TYPES = Object.keys(EVENT_COLORS) as EventType[];
 
 export default function Legend() {
   return (
-    <div className="absolute bottom-20 right-3 glass border border-terminal rounded p-3 z-10 text-xs font-mono">
+    <div className="hidden md:block absolute bottom-20 right-3 glass border border-terminal rounded p-3 z-10 text-xs font-mono">
       <div className="text-terminal-dim text-[10px] tracking-wider mb-2 uppercase">
         Event Types
       </div>
