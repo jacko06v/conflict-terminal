@@ -6,6 +6,7 @@ import "dotenv/config";
 const MIGRATIONS = [
   "001_initial.sql",
   "002_sources_url_unique.sql",
+  "003_sources_url_unique.sql",
 ];
 
 async function migrate() {

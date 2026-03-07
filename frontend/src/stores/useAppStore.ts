@@ -32,7 +32,7 @@ const DEFAULT_FILTERS: Filters = {
   minConfidence: 0,
   start: "",
   end: "",
-  timeRange: "7d",
+  timeRange: "30d",
 };
 
 export const useAppStore = create<AppState>((set) => ({

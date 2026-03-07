@@ -5,15 +5,15 @@ services:
     image: postgis/postgis:16-3.4
     container_name: conflict_terminal_db
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-conflict}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-conflict_secret}
-      POSTGRES_DB: ${POSTGRES_DB:-conflict_terminal}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-conflict} -d ${POSTGRES_DB:-conflict_terminal}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 10
@@ -27,8 +27,8 @@ services:
       postgres:
         condition: service_healthy
     environment:
-      DATABASE_URL: postgresql://${POSTGRES_USER:-conflict}:${POSTGRES_PASSWORD:-conflict_secret}@postgres:5432/${POSTGRES_DB:-conflict_terminal}
-      PORT: 4000
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      PORT: ${PORT:-4000}
       NODE_ENV: ${NODE_ENV:-development}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
     ports:

@@ -15,26 +15,15 @@ export async function createSource(
   input: CreateSourceInput,
   client = pool
 ): Promise<Source> {
-  // If a URL is provided, upsert by URL to avoid duplicate source rows
-  // when the same article is encountered across multiple ingestion runs.
+  // If a URL is provided, find-or-create to avoid duplicate source rows.
+  // Uses SELECT then INSERT rather than ON CONFLICT to avoid dependency
+  // on the unique constraint existing at runtime.
   if (input.url) {
-    const result = await (client as typeof pool).query(
-      `INSERT INTO sources (name, source_type, url, publisher, published_at, reliability_score, raw_text)
-       VALUES ($1,$2,$3,$4,$5,$6,$7)
-       ON CONFLICT (url) DO UPDATE
-         SET reliability_score = GREATEST(sources.reliability_score, EXCLUDED.reliability_score)
-       RETURNING *`,
-      [
-        input.name,
-        input.source_type,
-        input.url,
-        input.publisher ?? null,
-        input.published_at?.toISOString() ?? null,
-        input.reliability_score,
-        input.raw_text ?? null,
-      ]
+    const existing = await (client as typeof pool).query<Source>(
+      `SELECT * FROM sources WHERE url = $1 LIMIT 1`,
+      [input.url]
     );
-    return result.rows[0] as Source;
+    if (existing.rows.length > 0) return existing.rows[0];
   }
 
   const result = await (client as typeof pool).query(
@@ -44,7 +33,7 @@ export async function createSource(
     [
       input.name,
       input.source_type,
-      null,
+      input.url ?? null,
       input.publisher ?? null,
       input.published_at?.toISOString() ?? null,
       input.reliability_score,

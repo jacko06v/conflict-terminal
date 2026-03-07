@@ -12,7 +12,7 @@ export const EventFiltersSchema = z.object({
   start: z.string().datetime({ offset: true }).optional(),
   end: z.string().datetime({ offset: true }).optional(),
   bbox: z.string().regex(/^-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?$/).optional(),
-  limit: z.coerce.number().min(1).max(500).default(200),
+  limit: z.coerce.number().min(1).max(5000).default(2000),
   offset: z.coerce.number().min(0).default(0),
 });
 

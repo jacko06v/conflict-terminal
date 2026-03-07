@@ -50,7 +50,7 @@ export async function findEvents(filters: EventFilters): Promise<Event[]> {
     }
   }
 
-  const limit = Math.min(filters.limit ?? 200, 500);
+  const limit = Math.min(filters.limit ?? 2000, 5000);
   const offset = filters.offset ?? 0;
 
   const sql = `

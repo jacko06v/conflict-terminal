@@ -73,7 +73,7 @@ export default function Header() {
   
 
         <a
-          href="https://github.com/jacopomosconi/terminal-war"
+          href="https://github.com/jacko06v/conflict-terminal"
           target="_blank"
           rel="noopener noreferrer"
           className="flex items-center gap-1.5 px-2.5 py-1 rounded border border-terminal-cyan/30 text-terminal-cyan hover:bg-terminal-cyan/10 transition-colors text-xs"
