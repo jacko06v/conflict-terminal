@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgis/postgis:16-3.4
+    container_name: conflict_terminal_db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-conflict}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-conflict_secret}
+      POSTGRES_DB: ${POSTGRES_DB:-conflict_terminal}
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-conflict} -d ${POSTGRES_DB:-conflict_terminal}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: conflict_terminal_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:-conflict}:${POSTGRES_PASSWORD:-conflict_secret}@postgres:5432/${POSTGRES_DB:-conflict_terminal}
+      PORT: 4000
+      NODE_ENV: ${NODE_ENV:-development}
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+    ports:
+      - "4000:4000"
+    volumes:
+      - ./backend/src:/app/src
+    command: sh -c "npm run migrate && npm run seed && npm run dev"
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: conflict_terminal_frontend
+    depends_on:
+      - backend
+    environment:
+      VITE_API_URL: ${VITE_API_URL:-http://localhost:4000}
+      VITE_WS_URL: ${VITE_WS_URL:-ws://localhost:4000}
+    ports:
+      - "5173:5173"
+    volumes:
+      - ./frontend/src:/app/src
+
+volumes:
+  pgdata:
