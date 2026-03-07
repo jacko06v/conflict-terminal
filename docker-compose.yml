@@ -31,10 +31,13 @@ services:
       PORT: ${PORT:-4000}
       NODE_ENV: ${NODE_ENV:-development}
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
+      FIRMS_MAP_KEY: ${FIRMS_MAP_KEY}
+      AIS_API_KEY: ${AIS_API_KEY}
     ports:
       - "4000:4000"
     volumes:
       - ./backend/src:/app/src
+      - ./backend/analytics.csv:/app/analytics.csv
     command: sh -c "npm run migrate && npm run dev"
 
   frontend:

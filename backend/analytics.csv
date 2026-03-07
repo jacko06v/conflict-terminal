@@ -1,1 +1,4 @@
 timestamp,country,city,region,referrer,device
+"2026-03-07T23:40:40.651Z","Australia","South Brisbane","Queensland","test-e2e","desktop"
+"2026-03-07T23:43:13.468Z","Germany","Frankfurt am Main","Hesse","browser-test","desktop"
+"2026-03-07T23:43:52.395Z","Italy","Codevigo","Veneto","https://conflict-terminal.xyz/","mobile"
