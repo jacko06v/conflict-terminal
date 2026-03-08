@@ -20,10 +20,6 @@ function deviceFromUA(ua: string): string {
   return "desktop";
 }
 
-// Simple in-memory rate limit: 1 visit per IP per hour
-const recentIps = new Map<string, number>();
-setInterval(() => recentIps.clear(), 60 * 60 * 1000);
-
 export async function analyticsRoutes(app: FastifyInstance): Promise<void> {
   app.post("/track", async (req, reply) => {
     try {
@@ -36,10 +32,6 @@ export async function analyticsRoutes(app: FastifyInstance): Promise<void> {
       if (!ip || ip === "::1" || ip.startsWith("127.") || ip.startsWith("192.168.") || ip.startsWith("10.")) {
         return reply.send({ ok: true });
       }
-
-      // Rate limit: skip if same IP tracked in last hour
-      if (recentIps.has(ip)) return reply.send({ ok: true });
-      recentIps.set(ip, Date.now());
 
       const referrer = (req.body as Record<string, string>)?.referrer ?? "";
       const ua = req.headers["user-agent"] ?? "";
