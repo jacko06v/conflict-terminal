@@ -9,6 +9,7 @@ import StatsCards from "./components/Stats/StatsCards";
 import TimelineChart from "./components/Timeline/TimelineChart";
 import FiltersPanel from "./components/Filters/FiltersPanel";
 import EventDetailDrawer from "./components/EventDetail/EventDetailDrawer";
+import RiskGauge from "./components/RiskGauge/RiskGauge";
 
 const MIN_TIMELINE_H = 80;
 const MAX_TIMELINE_H = 400;
@@ -134,6 +135,7 @@ export default function App() {
 
         {/* Desktop right feed sidebar */}
         <aside className="hidden md:flex w-80 flex-shrink-0 bg-terminal-surface border-l border-terminal overflow-hidden flex-col">
+          <RiskGauge />
           <LiveFeed />
         </aside>
       </div>
