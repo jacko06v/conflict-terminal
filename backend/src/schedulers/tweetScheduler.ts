@@ -16,7 +16,7 @@ const URGENT_POLL_MS      = 5   * 60 * 1000;       // 5min
 const URGENT_COOLDOWN_MS  = 30  * 60 * 1000;       // 30min between urgent posts
 const URGENT_TYPES        = new Set(["missile", "airstrike", "explosion"]);
 const URGENT_MIN_SEVERITY = 4;
-const URGENT_MIN_CONF     = 0.72;
+const URGENT_MIN_CONF     = 72; // stored as 0–100 integer in DB
 
 const postedIds   = new Set<string>();
 let lastPostedAt  = 0;
