@@ -7,9 +7,7 @@
  * Fetches og:image from the first source URL and attaches it if available.
  */
 
-import fs from "fs";
-import path from "path";
-import { query } from "../db/client";
+import { pool, query } from "../db/client";
 import { Event, Source } from "../types";
 import { postEvent, fetchOgImage, xEnabled } from "../providers/xProvider";
 
@@ -20,27 +18,13 @@ const URGENT_TYPES        = new Set(["missile", "airstrike", "explosion"]);
 const URGENT_MIN_SEVERITY = 4;
 const URGENT_MIN_CONF     = 72; // stored as 0–100 integer in DB
 
-const POSTED_IDS_FILE = path.resolve(process.cwd(), "tweeted_ids.json");
-
-function loadPostedIds(): Set<string> {
-  try {
-    const data = JSON.parse(fs.readFileSync(POSTED_IDS_FILE, "utf8")) as string[];
-    return new Set(data);
-  } catch {
-    return new Set();
-  }
-}
-
-function savePostedIds(ids: Set<string>) {
-  // Keep only the last 2000 to avoid unbounded growth
-  const arr = [...ids].slice(-2000);
-  fs.writeFileSync(POSTED_IDS_FILE, JSON.stringify(arr));
-}
-
-const postedIds   = loadPostedIds();
 let lastPostedAt  = 0;
 let skipNext      = false;
 let urgentLastAt  = 0;
+
+async function markTweeted(eventId: string) {
+  await pool.query(`UPDATE events SET tweeted_at = NOW() WHERE id = $1`, [eventId]);
+}
 
 // Fetch the top source URL for an event
 async function getSourceUrl(eventId: string): Promise<string | null> {
@@ -62,11 +46,12 @@ async function getBestUnposted(): Promise<Event | null> {
      WHERE is_active = true
        AND occurred_at >= $1
        AND event_type != 'fire'
+       AND tweeted_at IS NULL
      ORDER BY severity DESC, confidence_score DESC
-     LIMIT 50`,
+     LIMIT 1`,
     [since]
   );
-  return rows.find((e) => !postedIds.has(e.id)) ?? null;
+  return rows[0] ?? null;
 }
 
 // Urgent: new critical events ingested in the last poll window
@@ -79,16 +64,16 @@ async function getUrgentEvent(): Promise<Event | null> {
        AND severity >= $2
        AND confidence_score >= $3
        AND event_type = ANY($4)
+       AND tweeted_at IS NULL
      ORDER BY severity DESC, confidence_score DESC
-     LIMIT 10`,
+     LIMIT 1`,
     [since, URGENT_MIN_SEVERITY, URGENT_MIN_CONF, Array.from(URGENT_TYPES)]
   );
-  return rows.find((e) => !postedIds.has(e.id)) ?? null;
+  return rows[0] ?? null;
 }
 
 async function tweet(event: Event, label: string) {
-  postedIds.add(event.id);
-  savePostedIds(postedIds);
+  await markTweeted(event.id); // persist immediately so restarts don't re-post
   lastPostedAt = Date.now();
 
   // Try to get an image from the first source article
