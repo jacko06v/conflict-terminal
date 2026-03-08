@@ -7,6 +7,8 @@
  * Fetches og:image from the first source URL and attaches it if available.
  */
 
+import fs from "fs";
+import path from "path";
 import { query } from "../db/client";
 import { Event, Source } from "../types";
 import { postEvent, fetchOgImage, xEnabled } from "../providers/xProvider";
@@ -18,7 +20,24 @@ const URGENT_TYPES        = new Set(["missile", "airstrike", "explosion"]);
 const URGENT_MIN_SEVERITY = 4;
 const URGENT_MIN_CONF     = 72; // stored as 0–100 integer in DB
 
-const postedIds   = new Set<string>();
+const POSTED_IDS_FILE = path.resolve(process.cwd(), "tweeted_ids.json");
+
+function loadPostedIds(): Set<string> {
+  try {
+    const data = JSON.parse(fs.readFileSync(POSTED_IDS_FILE, "utf8")) as string[];
+    return new Set(data);
+  } catch {
+    return new Set();
+  }
+}
+
+function savePostedIds(ids: Set<string>) {
+  // Keep only the last 2000 to avoid unbounded growth
+  const arr = [...ids].slice(-2000);
+  fs.writeFileSync(POSTED_IDS_FILE, JSON.stringify(arr));
+}
+
+const postedIds   = loadPostedIds();
 let lastPostedAt  = 0;
 let skipNext      = false;
 let urgentLastAt  = 0;
@@ -69,6 +88,7 @@ async function getUrgentEvent(): Promise<Event | null> {
 
 async function tweet(event: Event, label: string) {
   postedIds.add(event.id);
+  savePostedIds(postedIds);
   lastPostedAt = Date.now();
 
   // Try to get an image from the first source article
