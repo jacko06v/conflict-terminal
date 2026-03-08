@@ -95,15 +95,20 @@ export async function postEvent(event: Event, imageUrl?: string | null): Promise
     const text = formatTweet(event);
     let mediaId: string | undefined;
 
-    // Try to upload image if available
+    // Try to upload image (requires Basic plan — silently skip on 402)
     if (imageUrl) {
       const img = await fetchImageBuffer(imageUrl);
       if (img) {
         try {
           mediaId = await client.v1.uploadMedia(img.buffer, { mimeType: img.mimeType });
           console.log(`[x] Image uploaded: ${mediaId}`);
-        } catch (err) {
-          console.warn("[x] Image upload failed:", (err as Error).message);
+        } catch (err: unknown) {
+          const code = (err as { code?: number })?.code;
+          if (code === 402) {
+            console.log("[x] Media upload not available on free plan — posting text only");
+          } else {
+            console.warn("[x] Image upload failed:", (err as Error).message);
+          }
         }
       }
     }
