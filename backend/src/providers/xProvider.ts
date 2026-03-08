@@ -17,7 +17,7 @@ const TYPE_EMOJI: Record<string, string> = {
   alert:          "⚠️",
 };
 
-const SITE_URL = process.env.SITE_URL ?? "https://conflictterminal.com";
+const SITE_URL = process.env.SITE_URL ?? "https://conflict-terminal.xyz";
 
 function buildClient(): TwitterApi | null {
   const { X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_TOKEN_SECRET } = process.env;
@@ -69,13 +69,13 @@ function formatTweet(event: Event): string {
   const type   = event.event_type.toUpperCase().replace("_", " ");
   const loc    = [event.city, event.country].filter(Boolean).join(", ");
   const sevBar = "●".repeat(event.severity) + "○".repeat(5 - event.severity);
-  const conf   = Math.round(event.confidence_score * 100);
+  const conf   = Math.round(event.confidence_score);
   const tag    = "#" + (event.country ?? "").replace(/\s+/g, "");
 
   // URL always counts as 23 chars on X regardless of length
   // Budget: 280 - 23 (url) - 1 (newline before url) = 256 usable chars
   const header   = `${emoji} [${type}] — ${loc}\n`;
-  const footer   = `\nSev: ${sevBar} | Conf: ${conf}%\n${tag} #MiddleEast\n`;
+  const footer   = `\nSev: ${sevBar} | Confidence: ${conf}%\n${tag} #MiddleEast\n`;
   const budget   = 256 - header.length - footer.length;
   const title    = event.title.length > budget
     ? event.title.slice(0, budget - 1) + "…"
@@ -113,12 +113,46 @@ export async function postEvent(event: Event, imageUrl?: string | null): Promise
       }
     }
 
-    const params = mediaId ? { media: { media_ids: [mediaId] } } : {};
-    const result = await client.v2.tweet(text, params);
-    console.log(`[x] Tweet posted: ${result.data.id} — "${event.title.slice(0, 60)}"`);
-    return true;
-  } catch (err) {
-    console.error("[x] Failed to post tweet:", (err as Error).message);
+    // Try v2 first; fall back to v1.1 if app is not enrolled in a Project
+    let posted = false;
+
+    // --- Attempt 1: v2 endpoint (requires app in a Project) ---
+    try {
+      const v2Params = mediaId ? { media: { media_ids: [mediaId] } } : {};
+      const result = await client.v2.tweet(text, v2Params);
+      console.log(`[x] Tweet posted (v2): ${result.data.id} — "${event.title.slice(0, 60)}"`);
+      posted = true;
+    } catch (v2Err: any) {
+      const reason = v2Err?.data?.reason ?? "";
+      if (reason === "client-not-enrolled" || v2Err?.code === 403) {
+        console.warn("[x] v2 failed (app not in a Project) — falling back to v1.1");
+      } else {
+        // Non-enrollment v2 error — still try v1
+        console.warn("[x] v2 failed:", v2Err?.message ?? v2Err);
+      }
+    }
+
+    // --- Attempt 2: v1.1 statuses/update (works without Project) ---
+    if (!posted) {
+      try {
+        const v1Params: Record<string, string> = {};
+        if (mediaId) v1Params.media_ids = mediaId;
+        const result = await client.v1.tweet(text, v1Params);
+        console.log(`[x] Tweet posted (v1): ${result.id_str} — "${event.title.slice(0, 60)}"`);
+        posted = true;
+      } catch (v1Err: any) {
+        console.error("[x] v1.1 also failed:", v1Err?.message ?? v1Err);
+        if (v1Err?.code)   console.error("[x]   HTTP code:", v1Err.code);
+        if (v1Err?.data)   console.error("[x]   API response:", JSON.stringify(v1Err.data));
+        if (v1Err?.errors) console.error("[x]   Errors:", JSON.stringify(v1Err.errors));
+      }
+    }
+
+    return posted;
+  } catch (err: any) {
+    console.error("[x] Failed to post tweet:", err?.message ?? err);
+    if (err?.code)    console.error("[x]   HTTP code:", err.code);
+    if (err?.data)    console.error("[x]   API response:", JSON.stringify(err.data));
     return false;
   }
 }
