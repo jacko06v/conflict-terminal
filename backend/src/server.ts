@@ -10,6 +10,7 @@ import { mapRoutes } from "./routes/map";
 import { trackingRoutes } from "./routes/tracking";
 import { analyticsRoutes } from "./routes/analytics";
 import { startScheduler } from "./schedulers/ingestionScheduler";
+import { startTweetScheduler } from "./schedulers/tweetScheduler";
 import { refreshAircraft } from "./providers/adsbProvider";
 import { startAisStream } from "./providers/aisProvider";
 
@@ -63,6 +64,7 @@ async function main() {
 
   // Start ingestion scheduler
   startScheduler();
+  startTweetScheduler();
 
   // Start live tracking (aircraft every 60s, vessels via persistent WS)
   refreshAircraft().catch(() => {});
