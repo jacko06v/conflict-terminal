@@ -9,6 +9,10 @@ import { sourcesRoutes } from "./routes/sources";
 import { mapRoutes } from "./routes/map";
 import { trackingRoutes } from "./routes/tracking";
 import { analyticsRoutes } from "./routes/analytics";
+import { proxyRoutes } from "./routes/proxy";
+import { analyticsAdvancedRoutes } from "./routes/analyticsAdvanced";
+import { convergenceRoutes } from "./routes/convergence";
+import { strategicRoutes } from "./routes/strategic";
 import { startScheduler } from "./schedulers/ingestionScheduler";
 import { startTweetScheduler } from "./schedulers/tweetScheduler";
 import { refreshAircraft } from "./providers/adsbProvider";
@@ -51,6 +55,10 @@ async function main() {
   app.register(mapRoutes, { prefix: "/api" });
   app.register(trackingRoutes, { prefix: "/api" });
   app.register(analyticsRoutes, { prefix: "/api" });
+  app.register(proxyRoutes, { prefix: "/api" });
+  app.register(analyticsAdvancedRoutes, { prefix: "/api" });
+  app.register(convergenceRoutes, { prefix: "/api" });
+  app.register(strategicRoutes, { prefix: "/api" });
 
   // Global error handler
   app.setErrorHandler((error, _request, reply) => {

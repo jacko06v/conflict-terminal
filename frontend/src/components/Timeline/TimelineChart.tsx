@@ -32,7 +32,7 @@ function buildChartData(
 }
 
 const EVENT_TYPES: EventType[] = [
-  "airstrike", "explosion", "missile", "drone", "fire", "infrastructure", "troop_movement", "alert"
+  "airstrike", "explosion", "missile", "drone", "infrastructure", "troop_movement", "alert"
 ];
 
 export default function TimelineChart() {

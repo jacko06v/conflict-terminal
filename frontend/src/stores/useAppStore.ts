@@ -1,5 +1,15 @@
 import { create } from "zustand";
-import { ConflictEvent, EventType, Filters, MapLayer, VerificationStatus } from "../types";
+import { ConflictEvent, EventType, Filters, MapLayer, VerificationStatus, TrendingSpike, BreakingAlert, ConvergenceAlert, HotspotEscalation, FocalPointSummary } from "../types";
+
+interface InfraLayers {
+  military: boolean;
+  nuclear: boolean;
+  riskZones: boolean;
+  pipelines: boolean;
+  waterways: boolean;
+  hotspots: boolean;
+  spaceports: boolean;
+}
 
 interface AppState {
   // Selected event (for detail panel)
@@ -16,6 +26,10 @@ interface AppState {
   setLayerVisibility: (eventType: EventType, visible: boolean) => void;
   setLayers: (layers: MapLayer[]) => void;
 
+  // Infrastructure overlay layers
+  infraLayers: InfraLayers;
+  setInfraLayer: (key: keyof InfraLayers, visible: boolean) => void;
+
   // Live events injected via WebSocket
   liveEvents: ConflictEvent[];
   addLiveEvent: (event: ConflictEvent) => void;
@@ -23,6 +37,24 @@ interface AppState {
   // Filter panel open
   filtersOpen: boolean;
   setFiltersOpen: (open: boolean) => void;
+
+  // ── Advanced analytics state ──────────────────────────────────────
+  trendingSpikes: TrendingSpike[];
+  addTrendingSpikes: (spikes: TrendingSpike[]) => void;
+
+  breakingAlerts: BreakingAlert[];
+  addBreakingAlerts: (alerts: BreakingAlert[]) => void;
+  dismissBreakingAlert: (id: string) => void;
+
+  convergenceAlerts: ConvergenceAlert[];
+  setConvergenceAlerts: (alerts: ConvergenceAlert[]) => void;
+
+  // ── Escalation & Focal Points (from WS) ───────────────────────────
+  escalationScores: HotspotEscalation[];
+  setEscalationScores: (scores: HotspotEscalation[]) => void;
+
+  focalSummary: FocalPointSummary | null;
+  setFocalSummary: (summary: FocalPointSummary) => void;
 }
 
 const DEFAULT_FILTERS: Filters = {
@@ -53,6 +85,12 @@ export const useAppStore = create<AppState>((set) => ({
       ),
     })),
 
+  infraLayers: { military: false, nuclear: false, riskZones: false, pipelines: false, waterways: false, hotspots: false, spaceports: false },
+  setInfraLayer: (key, visible) =>
+    set((state) => ({
+      infraLayers: { ...state.infraLayers, [key]: visible },
+    })),
+
   liveEvents: [],
   addLiveEvent: (event) =>
     set((state) => ({
@@ -61,4 +99,30 @@ export const useAppStore = create<AppState>((set) => ({
 
   filtersOpen: false,
   setFiltersOpen: (open) => set({ filtersOpen: open }),
+
+  // ── Advanced analytics ──────────────────────────────────────────────
+  trendingSpikes: [],
+  addTrendingSpikes: (spikes) =>
+    set((state) => ({
+      trendingSpikes: [...spikes, ...state.trendingSpikes].slice(0, 30),
+    })),
+
+  breakingAlerts: [],
+  addBreakingAlerts: (alerts) =>
+    set((state) => ({
+      breakingAlerts: [...alerts, ...state.breakingAlerts].slice(0, 20),
+    })),
+  dismissBreakingAlert: (id) =>
+    set((state) => ({
+      breakingAlerts: state.breakingAlerts.filter((a) => a.id !== id),
+    })),
+
+  convergenceAlerts: [],
+  setConvergenceAlerts: (alerts) => set({ convergenceAlerts: alerts }),
+
+  escalationScores: [],
+  setEscalationScores: (scores) => set({ escalationScores: scores }),
+
+  focalSummary: null,
+  setFocalSummary: (summary) => set({ focalSummary: summary }),
 }));

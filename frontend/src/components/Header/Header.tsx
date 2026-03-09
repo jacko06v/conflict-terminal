@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAppStore } from "../../stores/useAppStore";
 
-export default function Header() {
+export default function Header({ onLiveClick, onNewsClick }: { onLiveClick?: () => void; onNewsClick?: () => void }) {
   const filtersOpen = useAppStore((s) => s.filtersOpen);
   const setFiltersOpen = useAppStore((s) => s.setFiltersOpen);
   const [time, setTime] = useState(new Date());
@@ -47,6 +47,22 @@ export default function Header() {
           </button>
           <span className="hidden md:inline text-terminal-dim/40">|</span>
           <span className="hidden md:inline text-terminal-dim">MIDDLE EAST / IRAN</span>
+          <span className="hidden md:inline text-terminal-dim/40">|</span>
+          <button
+            onClick={onLiveClick}
+            className="hidden md:flex items-center gap-1 hover:text-red-400 transition-colors"
+          >
+            <span className="w-1.5 h-1.5 rounded-full bg-red-500 animate-pulse" />
+            <span className="text-red-400">LIVE</span>
+          </button>
+          <span className="hidden md:inline text-terminal-dim/40">|</span>
+          <button
+            onClick={onNewsClick}
+            className="hidden md:flex items-center gap-1 hover:text-terminal-amber transition-colors"
+          >
+            <span className="text-terminal-dim">📺</span>
+            <span className="text-terminal-dim">NEWS</span>
+          </button>
         </nav>
       </div>
 

@@ -2,10 +2,14 @@ import { useEffect, useRef, useState, useMemo, useCallback } from "react";
 import maplibregl from "maplibre-gl";
 import { useEvents } from "../../hooks/useEvents";
 import { useAppStore } from "../../stores/useAppStore";
-import { ConflictEvent, EVENT_COLORS, EVENT_LABELS, MapLayer } from "../../types";
+import { ConflictEvent, EventType, EVENT_COLORS, EVENT_LABELS, MapLayer } from "../../types";
 import Legend from "./Legend";
 import LayerControls from "./LayerControls";
 import TrackingLayer from "./TrackingLayer";
+import InfrastructureLayer from "./InfrastructureLayer";
+import RiskZonesLayer from "./RiskZonesLayer";
+import StrategicLayers from "./StrategicLayers";
+import { countryToIso2 } from "../../utils/countryIso";
 
 interface StackedPicker {
   x: number;
@@ -124,8 +128,8 @@ function StackedEventPicker({ picker, eventsById, onSelect, onClose }: StackedEv
       <ul className="overflow-y-auto min-h-0 flex-1">
         {picker.events.map((ev) => {
           const full = eventsById.get(ev.id);
-          const color = EVENT_COLORS[ev.event_type] ?? "#ef4444";
-          const label = EVENT_LABELS[ev.event_type] ?? ev.event_type;
+          const color = EVENT_COLORS[ev.event_type as EventType] ?? "#ef4444";
+          const label = EVENT_LABELS[ev.event_type as EventType] ?? ev.event_type;
           return (
             <li key={ev.id}>
               <button
@@ -158,9 +162,10 @@ export default function MapPanel() {
   const [picker, setPicker] = useState<StackedPicker | null>(null);
 
   const { data: apiEvents } = useEvents();
-  const layers        = useAppStore((s) => s.layers);
-  const liveEvents    = useAppStore((s) => s.liveEvents);
-  const setSelectedId = useAppStore((s) => s.setSelectedEventId);
+  const layers         = useAppStore((s) => s.layers);
+  const liveEvents     = useAppStore((s) => s.liveEvents);
+  const setSelectedId  = useAppStore((s) => s.setSelectedEventId);
+  const selectedEventId = useAppStore((s) => s.selectedEventId);
 
   // Stable merged event list
   const allEvents = useMemo<ConflictEvent[]>(() => {
@@ -191,6 +196,26 @@ export default function MapPanel() {
 
     map.on("load", () => {
       console.log("[map] style loaded");
+
+      // Country boundary source — Natural Earth 110m, CORS-open, ~500KB
+      map.addSource("country-boundaries", {
+        type: "geojson",
+        data: "https://raw.githubusercontent.com/nvkelso/natural-earth-vector/master/geojson/ne_110m_admin_0_countries.geojson",
+      });
+      map.addLayer({
+        id: "country-highlight-fill",
+        type: "fill",
+        source: "country-boundaries",
+        paint: { "fill-color": "#3b82f6", "fill-opacity": 0.12 },
+        filter: ["==", ["get", "ISO_A2"], ""],
+      });
+      map.addLayer({
+        id: "country-highlight-border",
+        type: "line",
+        source: "country-boundaries",
+        paint: { "line-color": "#60a5fa", "line-width": 1.5, "line-opacity": 0.6 },
+        filter: ["==", ["get", "ISO_A2"], ""],
+      });
 
       map.addSource("events", {
         type: "geojson",
@@ -400,6 +425,16 @@ export default function MapPanel() {
     [allEvents]
   );
 
+  // ── Highlight selected event's country ───────────────────────────────────
+  useEffect(() => {
+    if (!mapRef.current || !mapLoaded) return;
+    const event = selectedEventId ? eventsById.get(selectedEventId) : null;
+    const iso = countryToIso2(event?.country);
+    const filter = ["==", ["get", "ISO_A2"], iso] as maplibregl.FilterSpecification;
+    if (mapRef.current.getLayer("country-highlight-fill"))   mapRef.current.setFilter("country-highlight-fill",   filter);
+    if (mapRef.current.getLayer("country-highlight-border")) mapRef.current.setFilter("country-highlight-border", filter);
+  }, [selectedEventId, eventsById, mapLoaded]);
+
   return (
     <div className="relative w-full h-full">
       <div ref={containerRef} className="w-full h-full" />
@@ -420,6 +455,9 @@ export default function MapPanel() {
       )}
 
       <TrackingLayer map={mapRef.current} mapLoaded={mapLoaded} />
+      <InfrastructureLayer map={mapRef.current} mapLoaded={mapLoaded} />
+      <StrategicLayers map={mapRef.current} mapLoaded={mapLoaded} />
+      <RiskZonesLayer map={mapRef.current} mapLoaded={mapLoaded} allEvents={allEvents} />
 
       {/* Debug overlay — remove in production */}
       {import.meta.env.DEV && (

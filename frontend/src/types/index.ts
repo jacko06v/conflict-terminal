@@ -5,7 +5,16 @@ export type EventType =
   | "drone"
   | "infrastructure"
   | "troop_movement"
-  | "alert";
+  | "alert"
+  | "earthquake"
+  | "cyber"
+  | "nuclear"
+  | "political"
+  | "economic"
+  | "health"
+  | "unrest"
+  | "maritime"
+  | "aviation";
 
 export type VerificationStatus = "unverified" | "partial" | "verified";
 export type GeolocationPrecision = "exact" | "approximate" | "area";
@@ -85,8 +94,145 @@ export interface Filters {
 }
 
 export interface WsMessage {
-  type: "connected" | "new_event" | "update_event";
+  type: "connected" | "new_event" | "update_event"
+    | "trending_spikes" | "breaking_alerts" | "convergence_alerts" | "temporal_anomalies"
+    | "hotspot_escalation" | "focal_points";
   payload: unknown;
+}
+
+// ─── Trending ───────────────────────────────────────────────────────
+
+export interface TrendingSpike {
+  term: string;
+  count: number;
+  baseline: number;
+  multiplier: number;
+  uniqueSources: number;
+  headlines: Array<{ title: string; source: string; link: string; publishedAt: number }>;
+}
+
+// ─── Breaking ───────────────────────────────────────────────────────
+
+export interface BreakingAlert {
+  id: string;
+  title: string;
+  source: string;
+  tier: number;
+  url: string;
+  threat: { level: string; category: string };
+  detectedAt: number;
+  category: string;
+}
+
+// ─── Convergence ────────────────────────────────────────────────────
+
+export interface ConvergenceAlert {
+  cellKey: string;
+  lat: number;
+  lon: number;
+  locationName: string;
+  types: string[];
+  eventCount: number;
+  score: number;
+}
+
+// ─── Country Instability ────────────────────────────────────────────
+
+export interface CountryInstability {
+  country: string;
+  score: number;
+  level: "critical" | "high" | "elevated" | "moderate" | "low";
+  trend: "accelerating" | "stable" | "decelerating";
+  recentEventCount: number;
+  topCategories: Array<{ category: string; count: number }>;
+}
+
+// ─── News Cluster ───────────────────────────────────────────────────
+
+export interface NewsCluster {
+  id: string;
+  headline: string;
+  articles: Array<{ id: string; title: string; source: string; tier: number }>;
+  sources: string[];
+  bestTier: number;
+}
+
+// ─── Hotspot Escalation ─────────────────────────────────────────────
+
+export type EscalationTrend = "escalating" | "de-escalating" | "stable";
+
+export interface HotspotEscalation {
+  hotspotId: string;
+  name: string;
+  staticBaseline: number;
+  dynamicScore: number;
+  combinedScore: number;
+  trend: EscalationTrend;
+  components: {
+    newsActivity: number;
+    ciiContribution: number;
+    geoConvergence: number;
+    militaryActivity: number;
+  };
+  lastUpdated: string;
+  change24h?: { change: number; start: number; end: number } | null;
+}
+
+// ─── Focal Points ───────────────────────────────────────────────────
+
+export type FocalPointUrgency = "watch" | "elevated" | "critical";
+
+export interface FocalPoint {
+  id: string;
+  entityId: string;
+  entityType: string;
+  displayName: string;
+  newsMentions: number;
+  newsVelocity: number;
+  topHeadlines: Array<{ title: string; source?: string }>;
+  signalCount: number;
+  signalDescriptions: string[];
+  focalScore: number;
+  urgency: FocalPointUrgency;
+  narrative: string;
+  correlationEvidence: string[];
+}
+
+export interface FocalPointSummary {
+  timestamp: string;
+  focalPoints: FocalPoint[];
+  topCountries: FocalPoint[];
+  topGroups: FocalPoint[];
+}
+
+// ─── Infrastructure Cascade ─────────────────────────────────────────
+
+export type CascadeImpactLevel = "critical" | "high" | "medium" | "low";
+
+export interface CascadeCountryImpact {
+  country: string;
+  countryName: string;
+  impactLevel: CascadeImpactLevel;
+  affectedCapacity: number;
+}
+
+export interface CascadeResult {
+  source: { id: string; type: string; name: string };
+  countriesAffected: CascadeCountryImpact[];
+  affectedNodes: Array<{ node: { name: string; type: string }; impactLevel: CascadeImpactLevel; pathLength: number }>;
+  redundancies: Array<{ id: string; name: string; capacityShare: number }>;
+}
+
+// ─── Population Exposure ────────────────────────────────────────────
+
+export interface PopulationExposure {
+  eventId: string;
+  eventName: string;
+  eventType: string;
+  lat: number;
+  lon: number;
+  exposedPopulation: number;
+  exposureRadiusKm: number;
 }
 
 export const EVENT_COLORS: Record<EventType, string> = {
@@ -97,6 +243,15 @@ export const EVENT_COLORS: Record<EventType, string> = {
   infrastructure: "#a855f7",
   troop_movement: "#3b82f6",
   alert: "#06b6d4",
+  earthquake: "#92400e",
+  cyber: "#10b981",
+  nuclear: "#dc2626",
+  political: "#6366f1",
+  economic: "#f59e0b",
+  health: "#14b8a6",
+  unrest: "#fb923c",
+  maritime: "#0ea5e9",
+  aviation: "#8b5cf6",
 };
 
 export const EVENT_LABELS: Record<EventType, string> = {
@@ -107,6 +262,15 @@ export const EVENT_LABELS: Record<EventType, string> = {
   infrastructure: "Infrastructure",
   troop_movement: "Troop Movement",
   alert: "Alert",
+  earthquake: "Earthquake",
+  cyber: "Cyber",
+  nuclear: "Nuclear",
+  political: "Political",
+  economic: "Economic",
+  health: "Health",
+  unrest: "Unrest",
+  maritime: "Maritime",
+  aviation: "Aviation",
 };
 
 export const VERIFICATION_COLORS: Record<VerificationStatus, string> = {
