@@ -1,0 +1,50 @@
+# Conflict Terminal
+
+> Real-time Iran conflict live map and OSINT dashboard.
+
+Conflict Terminal is a free, open-source intelligence (OSINT) web application that provides a real-time interactive map of conflict events in Iran, the Persian Gulf, and the broader Middle East region.
+
+## What It Does
+
+Conflict Terminal aggregates data from multiple open-source intelligence providers and displays events on a live, interactive map. The dashboard is updated every few minutes and includes:
+
+- **Live Conflict Map**: Interactive map showing military strikes, political events, and humanitarian incidents across Iran, Iraq, the Persian Gulf, Strait of Hormuz, and Gulf of Oman.
+- **Iran Airstrikes Tracker**: Real-time monitoring of airstrikes, drone strikes, and missile launches.
+- **Persian Gulf Vessel Tracking**: AIS-based maritime tracking of naval and commercial vessels in the Persian Gulf and Strait of Hormuz.
+- **Satellite Fire Detection**: NASA FIRMS thermal anomaly data to detect explosions, fires, and military activity from space.
+- **Aircraft Monitoring**: ADS-B transponder data for tracking military and civilian aircraft.
+- **Breaking News Feed**: Aggregated and classified news from GDELT, RSS feeds covering Iran and Middle East developments.
+- **Risk Assessment**: A real-time geopolitical risk gauge that scores current tension levels based on event frequency, severity, and source reliability.
+- **Event Timeline**: Chronological visualization of all conflict events, filterable by category (military, political, humanitarian).
+
+## Data Sources
+
+| Source | Type | What It Provides |
+|--------|------|------------------|
+| NASA FIRMS | Satellite | Fire and thermal anomaly detection — identifies potential explosions and military strikes |
+| AIS | Maritime | Automatic Identification System vessel positions — tracks naval movements in the Persian Gulf |
+| ADS-B | Aviation | Aircraft transponder data — monitors military and civilian flights |
+| GDELT | News | Global Database of Events, Language, and Tone — aggregated global news events |
+| RSS Feeds | News | Curated news feeds from major outlets covering Iran and Middle East |
+
+## Coverage Area
+
+The primary coverage area includes:
+- **Iran** (all provinces)
+- **Persian Gulf** and **Strait of Hormuz**
+- **Gulf of Oman**
+- **Iraq** (border regions)
+- **Broader Middle East** region
+
+## Key Features
+
+- Real-time updates every few minutes
+- Multi-layer interactive map (military, political, humanitarian events)
+- Confidence scoring for each event
+- WebSocket-powered live event feed
+- Mobile-responsive design
+- Completely free — no registration or subscription required
+
+## URL
+
+https://conflict-terminal.xyz

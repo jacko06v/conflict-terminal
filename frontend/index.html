@@ -1,10 +1,143 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CONFLICT TERMINAL</title>
-    <meta name="description" content="Geopolitical conflict monitoring dashboard — OSINT visualization" />
+
+    <!-- Primary SEO -->
+    <title>Conflict Terminal — Iran Conflict Live Map | Real-Time OSINT Dashboard</title>
+    <meta name="description" content="Real-time Iran conflict live map and OSINT dashboard. Track Iran airstrikes, Persian Gulf military activity, Middle East tensions, and geopolitical events with live satellite data, AIS ship tracking, and breaking news. Free, open-source intelligence monitoring updated every minute." />
+    <meta name="keywords" content="iran conflict, iran airstrikes, iran live map, persian gulf map live, iran war map, middle east conflict tracker, iran military activity, iran OSINT, conflict map live, iran news live, strait of hormuz tracker, iran drone strikes, iran missile strikes, geopolitical risk monitor, iran tensions today, iran attack map, real time conflict map, war tracker, iran israel conflict, iran conflict monitor, iran attack today, iran bombing live, iran military map, iran breaking news, middle east war live, iran escalation tracker, gulf of oman military, iran proxy war map, FIRMS fire data iran, AIS ship tracking persian gulf" />
+    <meta name="author" content="Conflict Terminal" />
+    <meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="googlebot" content="index, follow" />
+    <link rel="canonical" href="https://conflict-terminal.xyz/" />
+    <meta name="theme-color" content="#080c10" />
+    <meta name="color-scheme" content="dark" />
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/favicon.png" />
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://conflict-terminal.xyz/" />
+    <meta property="og:title" content="Conflict Terminal — Iran Conflict Live Map | OSINT Dashboard" />
+    <meta property="og:description" content="Real-time OSINT dashboard tracking Iran airstrikes, Persian Gulf military activity, and Middle East geopolitical events with live satellite imagery, AIS ship tracking, FIRMS fire data, and breaking news aggregation." />
+    <meta property="og:image" content="https://conflict-terminal.xyz/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Conflict Terminal dashboard showing a live map of Iran and the Persian Gulf with real-time conflict events" />
+    <meta property="og:site_name" content="Conflict Terminal" />
+    <meta property="og:locale" content="en_US" />
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content="https://conflict-terminal.xyz/" />
+    <meta name="twitter:title" content="Conflict Terminal — Iran Conflict Live Map" />
+    <meta name="twitter:description" content="Real-time OSINT dashboard tracking Iran airstrikes, Persian Gulf activity, and Middle East conflict events live." />
+    <meta name="twitter:image" content="https://conflict-terminal.xyz/og-image.png" />
+    <meta name="twitter:image:alt" content="Conflict Terminal live OSINT map dashboard" />
+
+    <!-- JSON-LD: WebApplication -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Conflict Terminal",
+      "alternateName": "Iran Conflict Live Map",
+      "url": "https://conflict-terminal.xyz",
+      "description": "Conflict Terminal is a free, real-time OSINT dashboard for monitoring Iran conflict events, airstrikes, Persian Gulf military activity, and Middle East geopolitical tensions. It aggregates data from NASA FIRMS satellite fire detection, AIS maritime vessel tracking, GDELT news monitoring, and RSS feeds to provide a comprehensive live map of conflict zones. The dashboard features a risk gauge, event timeline, live news feed, and interactive map with multiple data layers.",
+      "applicationCategory": "NewsApplication",
+      "operatingSystem": "Web",
+      "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Organization",
+        "name": "Conflict Terminal",
+        "url": "https://conflict-terminal.xyz"
+      },
+      "screenshot": "https://conflict-terminal.xyz/og-image.png",
+      "featureList": [
+        "Real-time conflict event map for Iran and Persian Gulf region",
+        "NASA FIRMS satellite fire and thermal anomaly detection",
+        "AIS maritime vessel tracking in the Strait of Hormuz and Persian Gulf",
+        "GDELT and RSS news aggregation with NLP classification",
+        "Live risk assessment gauge with confidence scoring",
+        "Interactive timeline of conflict events",
+        "WebSocket-powered live event feed",
+        "Multi-layer map: military, political, humanitarian events"
+      ],
+      "keywords": "iran conflict, iran airstrikes, iran live map, persian gulf map, middle east conflict, OSINT, real-time conflict monitoring"
+    }
+    </script>
+
+    <!-- JSON-LD: FAQPage — feeds AI search engines (GEO) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is Conflict Terminal?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Conflict Terminal is a free, open-source intelligence (OSINT) dashboard that provides a real-time live map of conflict events in Iran and the Persian Gulf region. It aggregates data from NASA FIRMS satellite imagery, AIS ship tracking, GDELT news monitoring, and RSS feeds to display military strikes, political developments, and humanitarian incidents on an interactive map."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How does the Iran conflict live map work?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The live map ingests data from multiple open-source intelligence providers every few minutes. NASA FIRMS detects thermal anomalies and fires via satellite. AIS tracking monitors vessel movements in the Persian Gulf and Strait of Hormuz. GDELT and RSS feeds aggregate breaking news. Events are classified by type (military, political, humanitarian) and plotted on the map with confidence scores."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What data sources does Conflict Terminal use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Conflict Terminal uses NASA FIRMS for satellite fire detection, AIS (Automatic Identification System) for maritime vessel tracking, GDELT for global news event monitoring, multiple RSS news feeds, and ADS-B for aircraft tracking. All sources are open-source and publicly available."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Is Conflict Terminal free to use?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes, Conflict Terminal is completely free to use. It is an open-source project that provides real-time conflict monitoring without any subscription or payment required."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I track Persian Gulf military activity in real time?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Conflict Terminal provides real-time tracking of military activity in the Persian Gulf, Strait of Hormuz, and Gulf of Oman through AIS vessel tracking, satellite fire detection, ADS-B aircraft monitoring, and aggregated news reports. Events are updated every few minutes."
+          }
+        }
+      ]
+    }
+    </script>
+
+    <!-- JSON-LD: WebSite with SearchAction (for sitelinks searchbox) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Conflict Terminal",
+      "url": "https://conflict-terminal.xyz",
+      "description": "Real-time Iran conflict live map and OSINT dashboard for monitoring airstrikes, Persian Gulf military activity, and Middle East geopolitical events.",
+      "inLanguage": "en"
+    }
+    </script>
+
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -28,6 +161,55 @@
   </head>
   <body>
     <div id="root"></div>
+
+    <!-- Noscript: semantic HTML for crawlers & AI engines that don't execute JS -->
+    <noscript>
+      <article>
+        <h1>Conflict Terminal — Real-Time Iran Conflict Live Map &amp; OSINT Dashboard</h1>
+        <p>
+          <strong>Conflict Terminal</strong> is a free, real-time open-source intelligence (OSINT) dashboard that monitors
+          the <strong>Iran conflict</strong>, <strong>Persian Gulf military activity</strong>, and <strong>Middle East geopolitical events</strong>.
+          The platform provides an interactive live map updated every few minutes with data from multiple intelligence sources.
+        </p>
+
+        <h2>Live Map Features</h2>
+        <ul>
+          <li><strong>Iran Airstrikes Tracker</strong> — Real-time monitoring of airstrikes, drone strikes, and missile launches in Iran and surrounding regions.</li>
+          <li><strong>Persian Gulf Live Map</strong> — Interactive map of the Strait of Hormuz, Gulf of Oman, and Persian Gulf with vessel tracking and military activity.</li>
+          <li><strong>Satellite Fire Detection</strong> — NASA FIRMS data detecting thermal anomalies and fires that may indicate military strikes or explosions.</li>
+          <li><strong>AIS Ship Tracking</strong> — Maritime vessel positions in the Persian Gulf, tracking naval movements and commercial shipping.</li>
+          <li><strong>Breaking News Feed</strong> — Aggregated news from GDELT, RSS feeds, and social media about Iran conflict developments.</li>
+          <li><strong>Risk Assessment Gauge</strong> — Real-time geopolitical risk score based on event frequency, severity, and source confidence.</li>
+          <li><strong>Event Timeline</strong> — Chronological view of all conflict events with filtering by type: military, political, humanitarian.</li>
+        </ul>
+
+        <h2>Data Sources</h2>
+        <p>
+          Conflict Terminal aggregates open-source data from: <strong>NASA FIRMS</strong> (satellite fire/thermal detection),
+          <strong>AIS</strong> (Automatic Identification System for maritime tracking), <strong>ADS-B</strong> (aircraft transponder data),
+          <strong>GDELT</strong> (global news event database), and curated <strong>RSS news feeds</strong> covering Iran, the Persian Gulf,
+          and the broader Middle East region.
+        </p>
+
+        <h2>Frequently Asked Questions</h2>
+
+        <h3>What is Conflict Terminal?</h3>
+        <p>Conflict Terminal is a free OSINT dashboard providing a real-time live map of conflict events in Iran and the Persian Gulf. It aggregates satellite imagery, ship tracking, aircraft monitoring, and news data to display military strikes, political developments, and humanitarian incidents.</p>
+
+        <h3>How does the Iran conflict live map work?</h3>
+        <p>The live map ingests data from multiple open-source intelligence providers every few minutes. NASA FIRMS detects fires via satellite. AIS monitors vessels in the Persian Gulf. GDELT and RSS aggregate breaking news. Events are classified by type and plotted on the map with confidence scores.</p>
+
+        <h3>What area does the map cover?</h3>
+        <p>The map primarily covers Iran, Iraq, the Persian Gulf, Strait of Hormuz, Gulf of Oman, and surrounding Middle East regions. It tracks events including airstrikes, naval movements, political incidents, and humanitarian developments.</p>
+
+        <h3>Is Conflict Terminal free?</h3>
+        <p>Yes, Conflict Terminal is completely free and open-source. No subscription or registration required.</p>
+
+        <h2>Keywords</h2>
+        <p>Iran conflict, Iran airstrikes, Iran live map, Persian Gulf map live, Iran war map, Middle East conflict tracker, Strait of Hormuz tracker, Iran drone strikes, Iran missile strikes, Iran attack map, real-time conflict map, OSINT dashboard, geopolitical risk monitor, Iran military activity, Iran breaking news live.</p>
+      </article>
+    </noscript>
+
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

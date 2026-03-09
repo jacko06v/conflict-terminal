@@ -33,6 +33,10 @@ services:
       CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:5173}
       FIRMS_MAP_KEY: ${FIRMS_MAP_KEY}
       AIS_API_KEY: ${AIS_API_KEY}
+      X_API_KEY: ${X_API_KEY}
+      X_API_SECRET: ${X_API_SECRET}
+      X_ACCESS_TOKEN: ${X_ACCESS_TOKEN}
+      X_ACCESS_TOKEN_SECRET: ${X_ACCESS_TOKEN_SECRET}
     ports:
       - "4000:4000"
     volumes:
